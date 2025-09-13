@@ -112,6 +112,20 @@ then use merge after check changes
 3. git pull origin <branch-name> (pull specific branch)
 4. git fetch origin <branch-name> (fetch specific branch)
 
+### github pages for static-site and react app
+
+### diff command
+1. git diff
+2. git diff --staged
+3. git diff <commit-hash>
+4. git diff <branch-name>
+5. git diff <commit-hash> <commit-hash>
+6. git diff <branch-name> <branch-name>
+7. git diff --name-only
+8. git diff --name-status
+9. git diff --cached
+10. git diff --color-words
+
 
 
 
