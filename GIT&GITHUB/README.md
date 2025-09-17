@@ -126,7 +126,48 @@ then use merge after check changes
 9. git diff --cached
 10. git diff --color-words
 
+### stash commands
+/*
+Git stash is used to temporarily save changes that you don't want to commit immediately.
+Useful when you need to:
+- Switch branches without committing current changes
+- Pull updates without conflicts
+- Save work in progress
+- Keep working directory clean
+*/
 
+1. git stash (or git stash push) -> save current changes
+2. git stash save "message" -> stash with description
+3. git stash list -> show all stashes
+4. git stash show -> show changes in latest stash
+5. git stash show stash@{n} -> show specific stash
+7. git stash apply -> apply but keep stash
+6. git stash pop -> apply and remove latest stash
+8. git stash drop -> remove latest stash
+9. git stash drop stash@{n} -> remove specific stash
+10. git stash clear -> remove all stashes
+11. git stash branch <branch-name> -> create new branch from stash
+12. git stash push -m "message" <file-path> -> stash specific files
 
+### fork command
+1. git fork <remote-repository-url>
 
+### ssh key
+1. generate ssh key
+```
+ssh-keygen -t ed25519 -C "your-email@example.com"
+Enter file in which to save the key (/c/Users/yourusername/.ssh/id_ed25519):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+```
+- go to /c/Users/yourusername/.ssh/id_ed25519
+- copy the content of id_ed25519.pub
+- go to github account settings
+- click on ssh and gpg keys
+- click on new ssh key
+- paste the content of id_ed25519.pub
+- add title for ssh key
+3. clone repo using ssh
+4. push changes using ssh
 
+### same for gitLab
