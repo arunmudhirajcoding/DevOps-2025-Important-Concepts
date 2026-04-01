@@ -2,7 +2,7 @@
 - It works on my machine but not on yours
 - It works on my machine and on yours
 - It works on any machine
-- Runs on any system withoutworrying about dependencies,OS versions, or conflicts
+- Runs on any system without worrying about dependencies,OS versions, or conflicts
 
 - username : arunkumardurgollu3542
 
@@ -11,6 +11,15 @@
 - running instance of docker image is docker container (like java obj instance)
 - isolated: independent that any packeges need are isnt neccessory to be present in host system
 - base(parent) image is like (node for backend)
+
+## installation of docker-desktop for windows
+- go to docker offical website to download the desktop 
+- https://www.docker.com/products/docker-desktop/
+- open the docker desktop and signup using github or oauth.
+### requirements 
+- install wsl 
+- enable wsl and hyper v in windows features in ur local machine
+
 
 ## commands
 - docker run -it (provide terminal) node (<name of image>) /bin/bash(to use linux command)
@@ -21,9 +30,13 @@
 ## dockerfile in a project
 eg: 
 FROM node:latest  --> base image (what we need to run this project)
+
 COPY . .          --> where to copy and paste the image
+
 RUN npm install   --> install dependencies
+
 EXPOSE 3000       --> which port to run the image or project 
+
 CMD ["nodemon","index.js"] --> what to run when container is started to run this project
 
 steps-
@@ -91,6 +104,46 @@ steps:
 - run the command --> docker pull my-app:v1
 - run the command --> docker run -p 4000:4000 my-app:v1
 - now we can access the app on http://localhost:4000
+
+## Docker with gitLab
+- pull the gitlab/gitlab-ce image from docker hub
+- run the command --> docker pull gitlab/gitlab-ce
+- run the command --> docker run -p 4000:4000 gitlab/gitlab-ce
+- now we can access the gitlab on http://localhost:4000
+after some time 10 to 15 minutes it will be ready to use then go to http://localhost:4000/users/sign_in
+- default username is root
+- default password is get from command
+- run the command --> docker exec -it <container_id> cat /etc/gitlab/initial_root_password
+then copy the password and paste it in gitlab login page
+- now gitlab is ready to use in localhost
+### gitlab-server docker compose 
+- create a file named docker-compose.yaml
+- add the following code in docker-compose.yaml
+```
+    version: '28.4.0'
+    services:
+      gitlab-server:
+        image: 'gitlab/gitlab-ce:latest'
+        restart: always
+        container_name: 'my-gitlab-server'
+        environment:
+          image: ''
+          GITLAB_OMNIBUS_CONFIG: | --> | for multi line config
+            gitlab_rails['inital_root_password'] = '@Ak354200'
+            puma['worker_processes'] = 0  --> puma webserver disable with default settings
+            external_url 'http://localhost:4000'
+        ports:
+          - '4000:4000'
+          - '2222:22'
+        volumes:
+          - './config:/etc/gitlab'
+          - './logs:/var/log/gitlab'
+          - './data:/var/opt/gitlab'
+
+```
+- run the command --> docker compose up
+- now we can access the gitlab on http://localhost:4000
+
 
 # Docker Development Workflow
 
@@ -165,5 +218,3 @@ steps:
 4. Use multi-stage builds for production
 5. Implement proper security measures
 6. Regular updates and maintenance
-
-
