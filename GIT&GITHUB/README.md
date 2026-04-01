@@ -1,3 +1,11 @@
+## Git Installation
+- install git software from offical website https://git-scm.com/downloads
+- follow the installation steps as per your operating system
+- verify git installation
+```bash
+git --version
+```
+
 ## Git & GitHub commands
 steps for git configuration 
 1. git config --global user.name "Your Name"
@@ -15,6 +23,14 @@ branch rename
 1. git branch -m main
 2. git branch -M main
 next step for initialzation
+## GITHUB account creating
+- open github in browser 
+- signup using email or oauth
+- create a new repository by click on new repository button
+- provide repository name and description
+- choose public or private
+- click on save then we can see steps are given in github for pushing local repo to remote repo then follow bellow steps in ur local machine - 
+
 1. git remote add origin https://github.com/yourusername/yourrepository.git
 2. git push -u origin main
  then authentication 
@@ -153,15 +169,20 @@ Useful when you need to:
 1. git fork <remote-repository-url>
 
 ### ssh key
+- SSH key is used to authenticate with remote repositories without using username and password every time.
+
 1. generate ssh key
 ```
 ssh-keygen -t ed25519 -C "your-email@example.com"
-Enter file in which to save the key (/c/Users/yourusername/.ssh/id_ed25519):
-Enter passphrase (empty for no passphrase):
+
+Enter file in which to save the key (/c/Users/yourusername/.ssh/id_ed25519): press enter to save in default location.
+Enter passphrase (empty for no passphrase): press enter for no passphrase
 Enter same passphrase again:
 ```
-- go to /c/Users/yourusername/.ssh/id_ed25519
-- copy the content of id_ed25519.pub
+- it will give a path where this ssh key is generated
+- go to /c/Users/yourusername/.ssh/
+- there will be 2 keys public and private .
+- copy public key  the content of id_ed25519.pub
 - go to github account settings
 - click on ssh and gpg keys
 - click on new ssh key
@@ -169,5 +190,8 @@ Enter same passphrase again:
 - add title for ssh key
 3. clone repo using ssh
 4. push changes using ssh
+
+- if u have already configured with an account and want to use another account in the local machine without changing existing credentials then.
+- u can generate multiple ssh keys for multiple accounts and use ssh config file to manage them
 
 ### same for gitLab
