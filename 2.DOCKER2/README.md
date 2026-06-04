@@ -22,13 +22,14 @@
 
 
 ## commands
-- docker run -it (provide terminal) node (<name of image>) /bin/bash(to use linux command)
-- docker build -t(tag flag) my-app(<name of image>) .
-- docker run -p(provide port) 3000:3000 my-app
+- docker run -it (provide terminal) `<image_name>` /bin/bash(to use linux command)
+- docker build -t(tag flag)  `<name of image>` .
+- docker run -p(provide port) 3000:3000 `<image name>`
 - docker system prune -a (to remove all unused images, containers, and networks at a time)
 
 ## dockerfile in a project
 eg: 
+```yml
 FROM node:latest  --> base image (what we need to run this project)
 
 COPY . .          --> where to copy and paste the image
@@ -38,12 +39,12 @@ RUN npm install   --> install dependencies
 EXPOSE 3000       --> which port to run the image or project 
 
 CMD ["nodemon","index.js"] --> what to run when container is started to run this project
-
+```
 steps-
-1. build the image --> docker build -t(tag flag) my-app(<name of image>) .
-2. run the image --> docker run -p(provide port) 3000:3000 my-app
-        or
-3. run the image via docker-desktop by click on run button and set the port to 3000 then click on run 
+1. build the image --> `docker build -t(tag flag) my-app(`<name of image>`)` .
+2. run the image --> `docker run -p(provide port) 3000:3000 my-app`
+
+3. or else,run the image via docker-desktop by click on run button and set the port to 3000 then click on run 
 
 ## to ignore files for build image
 - create a file named .dockerignore
@@ -55,7 +56,10 @@ steps-
 
 ## create new version
 - means build image with same name but new tag as versions (v1,v2,v3)
-- docker build -t(tag flag) my-app:v1(<name of image>:<version>) .
+- docker build -t `<name_of_image>:<version>` .
+```bash
+docker build -t my-app:v2 .
+```
 
 # volume
 - volume is used to persist data in container and changes made in local project will be reflected in container and vice versa
@@ -64,22 +68,30 @@ steps-
 steps:
 - add a line workdir /app in dockerfile to store the project in container using volume
 
-- run : docker run --name my-container(<name of the container>) -p(provide port) 4000:4000 --rm(--rm flag to remove container after it is stopped) -v "NOTES/_DOCKER/implementation/node-app:/app"(relative path of the project) my-app(<name of image>)
+- run : docker run --name `<name of the container>` -p(provide port) 4000:4000 --rm(--rm flag to remove container after it is stopped) -v(flag indicates volume) `<relative_path_of_the_project>/<WORKDIR_name>`  `<name of image>`
+```bash
+docker run --name my-container -p 4000:4000 --rm -v "Note/2.DOCKER2/implementation/node-app:/app"
+```
 
-- after running it. it automatically runs the container or image
+- after running it. it automatically runs the container or image.
+- any changes made in run time . those changes reflect on container, without restart the container and image
 
 ## compose.yaml (yet another markup language)
 - to run multiple containers at a time
 - run all commands automatically
-- code:
-    services:
+```compose.yml
+services:
   img:
     build: .
     container_name: my_container
     ports:
       - 4000:4000
+```
 
-- run: docker compose up
+- run: 
+```bash
+docker compose up
+```
 
 # docker hub
 - to store docker images
@@ -92,11 +104,20 @@ steps:
 - give name to repository
 - click on create
 - now we can push our image to this repository
-- docker push my-app:v1(<name of image>:<version>)
+- docker push `<name_of_image>:<version>`
+```bash
+docker push my-app:v2
+```
 
 ## play wtih docker
-- docker buildx build --platform linux/amd64 -t my-app:v1 .
+- without local setup , we can run on mock servr. to test our image
+
+- docker buildx build --platform `<Name_OF_SERVER_ON_PLAYGROUND>` -t `<IMAGE_NAME>` .
+```bash
+docker buildx build --platform linux/amd64 -t my-app:v1
+```
 - docker push my-app:v1
+
 ### to test the docker online
 - play with docker --> https://labs.play-with-docker.com/
 - after logging in click on add new instance
@@ -105,45 +126,63 @@ steps:
 - run the command --> docker run -p 4000:4000 my-app:v1
 - now we can access the app on http://localhost:4000
 
-## Docker with gitLab
+## gitLab in Docker
 - pull the gitlab/gitlab-ce image from docker hub
-- run the command --> docker pull gitlab/gitlab-ce
-- run the command --> docker run -p 4000:4000 gitlab/gitlab-ce
-- now we can access the gitlab on http://localhost:4000
+- run the command
+```bash
+docker pull gitlab/gitlab-ce
+docker run -p 8000:80 gitlab/gitlab-ce
+```
+- now we can access the gitlab on http://localhost:8000
 after some time 10 to 15 minutes it will be ready to use then go to http://localhost:4000/users/sign_in
 - default username is root
-- default password is get from command
-- run the command --> docker exec -it <container_id> cat /etc/gitlab/initial_root_password
-then copy the password and paste it in gitlab login page
+- run the command to get the password
+```bash
+docker exec -it `<container_id_OF_GITLABIMAGE>` cat /etc/gitlab/initial_root_password
+```
+- then copy the password and paste it in gitlab login page
 - now gitlab is ready to use in localhost
+
 ### gitlab-server docker compose 
-- create a file named docker-compose.yaml
+- create a file anywhere in local machine for automate gitlab server with name docker-compose.yaml
 - add the following code in docker-compose.yaml
-```
-    version: '28.4.0'
-    services:
+```yml
+version: '28.4.0'
+   services:
       gitlab-server:
-        image: 'gitlab/gitlab-ce:latest'
-        restart: always
-        container_name: 'my-gitlab-server'
-        environment:
-          image: ''
-          GITLAB_OMNIBUS_CONFIG: | --> | for multi line config
+         image: 'gitlab/gitlab-ce:latest'
+         restart: always
+         container_name: 'my-gitlab-server'
+         hostname: my-gitlab-server
+         environment:
+            GITLAB_OMNIBUS_CONFIG: | # '|' -> for multi line config
             gitlab_rails['inital_root_password'] = '@Ak354200'
-            puma['worker_processes'] = 0  --> puma webserver disable with default settings
-            external_url 'http://localhost:4000'
-        ports:
-          - '4000:4000'
-          - '2222:22'
-        volumes:
-          - './config:/etc/gitlab'
-          - './logs:/var/log/gitlab'
-          - './data:/var/opt/gitlab'
+            puma['worker_processes'] = 0 # puma webserver disable with default settings
+            external_url 'http://my-gitlab-server' # this is bcoz gitlab runner will run on this url but gitab server on local host.
+         ports:
+            - '8000:80'
+            - '2222:22'
+         volumes:
+            - './gitlab/config:/etc/gitlab'
+            - './gitlab/logs:/var/log/gitlab'
+            - './gitlab/data:/var/opt/gitlab'
+
+      gitlab-runner:
+         image: "gitlab/gitlab-runner:latest"
+         container_name: my-gitlab-runner
+         restart: always
+         depends_on:
+            - gitlab-server
+         volumes:
+            - ./gitlab-runner/config:/etc/gitlab-runner
+            - /var/run/docker.sock:/var/run/docker.sock # to run runner in docker
+         privileged: true
 
 ```
-- run the command --> docker compose up
-- now we can access the gitlab on http://localhost:4000
+- run the command --> `docker compose up`
+- now we can access the gitlab on http://localhost:8000
 
+---
 
 # Docker Development Workflow
 
