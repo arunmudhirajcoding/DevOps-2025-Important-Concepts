@@ -75,7 +75,7 @@ arun was here
 9. even after delete the pod, data is still there
 10. to check it, run the pod again and check the data by using the same command 8
 
-## handling non sensitive data and sensitive data
+## handling non sensitive data and sensitive data using configmap and secret
 1. create configmap.yml and secret.yml files
 2. start minikube
 3. kubectl appy -f configmap.yml, secret.yml and pod-env.yml

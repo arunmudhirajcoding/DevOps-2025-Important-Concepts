@@ -8,6 +8,7 @@
 - go to windows installation and click on link given there
 - download the installer and run it
 - verify the installation by running `aws --version`
+- To know the user identity `aws sts get-caller-identity`
 
 ## IAM (Identity and Access Management)
 - search and click on IAM in aws console services
