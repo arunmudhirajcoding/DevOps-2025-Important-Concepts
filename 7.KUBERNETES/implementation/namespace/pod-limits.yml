@@ -9,8 +9,9 @@ spec:
       image: busybox
       command: ["sh", "-c", "sleep 3600"]
       resources:
-        memory: "128Mi"  #Mebibyte
-        cpu: "100m" #cpu 10%
-      limits:
-        memory: "256Mi"
-        cpu: "200m"
+        requests:
+          memory: "128Mi"  #Mebibyte
+          cpu: "100m" #cpu 10%
+        limits:
+          memory: "256Mi"
+          cpu: "200m"

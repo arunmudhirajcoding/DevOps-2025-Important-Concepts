@@ -224,6 +224,15 @@ sudo apt install curl unzip
 curl -fsSL https://bun.sh/install | bash
 source /home/ubuntu/.bashrc
 ```
+9. move the bun to all users so that jenkins can use it
+```bash
+sudo rm /usr/local/bin/bun
+sudo cp /home/ubuntu/.bun/bin/bun /usr/local/bin/bun
+sudo chmod 755 /usr/local/bin/bun
+
+sudo su - jenkins
+bun --version
+```
 
 ## step up in local machine
 1. create a nextjs project and link with github
@@ -232,34 +241,40 @@ source /home/ubuntu/.bashrc
 node {
     def appDir = '/var/www/nextjs-app'
 
-    stage('Clean Workspace'){
+    stage('Clean Workspace') {
         echo "Cleaning Jenkins workspace"
         deleteDir()
     }
 
-    stage('Clone repo'){
-        echo "cloning the repo"
+    stage('Clone repo') {
+        echo "Cloning the repo"
         git(
-            branch: 'main',
-             credentialsId: 'github-pat',
-            url: 
-        ) 
+            branch: 'master',
+            credentialsId: 'github-pat',
+            url: 'https://github.com/arunmudhirajcoding/nextjs-jenkins-test.git'
+        )
     }
 
-    stage('Deploy to EC2'){
+    stage('Deploy to EC2') {
         echo "Deploying to EC2"
+
         sh """
             sudo mkdir -p ${appDir}
-            sudo chown -R
-            jenkins:jenkins ${appDir}
+            sudo chown -R jenkins:jenkins ${appDir}
 
-            rsync -av --delete --exclude=".git" --exclude="node_modules" ./ ${appDir}
+            rsync -av --delete \
+                --exclude=".git" \
+                --exclude="node_modules" \
+                ./ ${appDir}
 
             cd ${appDir}
-            sudo bun install
-            sudo bun run build
+
+            bun install
+            bun run build
+
             sudo fuser -k 3000/tcp || true
-            sudo bun run start
+
+            nohup bun run start > app.log 2>&1 &
         """
     }
 }

@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: welcome-container
-      image: kicbase/echo-server:1/0
+      image: kicbase/echo-server:1.0
       ports:
-        - containerPort: 9696
+        - containerPort: 8080

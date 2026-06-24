@@ -7,8 +7,8 @@ spec:
     - name: my-container
       image: busybox
       command: ["sh","-c","sleep 3600"]
-      envFrom:
-        - ConfigMapRef:
+      envFrom: # to integrate multiple maps
+        - configMapRef:
             name: my-configmap
         - secretRef:
             name: my-secret
